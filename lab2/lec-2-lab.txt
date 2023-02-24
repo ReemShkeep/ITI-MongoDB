@@ -1,0 +1,8 @@
+- Executing update operations using all update operators ($set, $unset, $push, etc).
+- Executing insertion queries with both insertOne and insertMany with ordered flag.
+- Executing deleteOne and deleteMany operations.
+- Creating indexes (single field, compound, multi-key and text indexes).
+- Using cursor.explain with different queries and reading and understanding the winningPlan.
+
+References:
+https://www.mongodb.com/docs/manual/indexes/

@@ -1,0 +1,14 @@
+- Create a free cluster on Atlas.
+- Install Mongo Shell.
+- Load a sample dataset.
+- Explore databases and collections.
+- Execute find queries using query operators ($ne, $eq, $gt, $regex, etc) and projection.
+- Insert arrays and arrays of nested documents.
+- Execute find queries on arrays and arrays of nested documents using $elemMatch, $all and $size.
+
+References:
+https://www.mongodb.com/docs/manual/reference/connection-string/#connection-string-uri-format
+https://www.mongodb.com/docs/manual/reference/bson-types/
+https://www.mongodb.com/docs/manual/reference/operator/
+https://www.mongodb.com/docs/manual/reference/method/js-cursor/
+https://www.mongodb.com/docs/manual/installation/

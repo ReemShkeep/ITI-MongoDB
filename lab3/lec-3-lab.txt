@@ -1,0 +1,9 @@
+- Using sort, skip and limit methods of the cursor.
+- Running aggregation queries that use multiple stages ($match, $group, $count, $skip, $limit, $lookup, etc).
+- Using $project and $addFields with operator expressions such as ($getField, $first, $concat, $dateToString, etc).
+- Reading and using $unwind.
+- Using array update operators ($, $[], $[<identifier>]).
+
+References:
+https://www.mongodb.com/docs/manual/reference/operator/aggregation/#expression-operators 
+https://www.mongodb.com/docs/manual/reference/operator/aggregation-pipeline/ 
