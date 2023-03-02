@@ -1,0 +1,49 @@
+//1- Execute update operations using all update operators ($set, $unset, $push, etc).
+//use $set to change the value of a field
+db.restaurants.updateMany({name: "White Castle"}, {$set: {cuisine: "American (New)"}})
+//use $unset to remove the field
+db.restaurants.updateMany({name: "White Castle (East 53rd Street)"}, {$unset: {grades: ""}})
+//use $push to add a new grade to the array
+db.restaurants.updateMany({name: "White Castle (East 53rd Street)"}, {$push: {grades: {date: new Date("2014-03-06T00:00:00Z"), grade: "A", score: 11}}})
+//use $pop to remove the last grade from the array
+db.restaurants.updateMany({name: "White Castle (East 53rd Street)"}, {$pop: {grades: 1}})
+//use $pull to remove a specific grade from the array
+db.restaurants.updateMany({name: "White Castle (East 53rd Street)"}, {$pull: {grades: {grade: "A"}}})
+//use $inc to increment the score by 2
+db.restaurants.updateMany({name: "White Castle (East 53rd Street)"}, {$inc: {"grades.0.score": 2}})
+//use $min to set the score to 1 if the current value is greater than 1
+db.restaurants.updateMany({name: "White Castle (East 53rd Street)"}, {$min: {"grades.0.score": 1}})
+//use $max to set the score to 200 if the current value is less than 200
+db.restaurants.updateMany({name: "White Castle (East 53rd Street)"}, {$max: {"grades.0.score": 200}})
+//use $mul to multiply the score by 1.5
+db.restaurants.updateMany({name: "White Castle (East 53rd Street)"}, {$mul: {"grades.0.score": 1.5}})
+//use $rename to rename the field
+db.restaurants.updateMany({name: "White  Castle (East 53rd Street)"}, {$rename: {"grades.0.score": "grades.0.score2"}})
+
+//2- Executing insertion queries with both insertOne and insertMany with ordered flag.
+//use insertOne to insert a single document
+db.restaurants.insertOne({name: "White Castle (East 53rd Street)", cuisine: "American", borough: "Manhattan", address: {building: "195", street: "East 53rd Street", zipcode: "10022", coord: [-73.9246028, 40.6522396]}, grades: [{date: new Date("2014-03-06T00:00:00Z"), grade: "A", score: 11}]})
+//use insertMany to insert multiple documents
+db.restaurants.insertMany([{name: "White Castle (East 53rd Street)", cuisine: "American", borough: "Manhattan", address: {building: "195", street: "East 53rd Street", zipcode: "10022", coord: [-73.9246028, 40.6522396]}, grades: [{date: new Date("2014-03-06T00:00:00Z"), grade: "A", score: 11}]}, {name: "White Castle (East 53rd Street)", cuisine: "American", borough: "Manhattan", address: {building: "195", street: "East 53rd Street", zipcode: "10022", coord: [-73.9246028, 40.6522396]}, grades: [{date: new Date("2014-03-06T00:00:00Z"), grade: "A", score: 11}]}])
+
+// 3- Executing deleteOne and deleteMany operations.
+//use deleteOne to delete the first document that matches the filter
+db.restaurants.deleteOne({name: "White Castle (East 53rd Street)"})
+//use deleteMany to delete all documents that match the filter
+db.restaurants.deleteMany({name: "White Castle (East 53rd Street)"})
+
+//4- Creating indexes (single field, compound, multi-key and text indexes).
+//single field
+db.restaurants.createIndex({name: 1})
+//compound
+db.restaurants.createIndex({name: 1, cuisine: 1})
+//multi-key
+db.restaurants.createIndex({grades: 1})
+//text
+db.restaurants.createIndex({name: "text"})
+
+//5- Using cursor.explain with different queries and reading and understanding the winningPlan.
+//use explain to see the winning plan
+db.restaurants.find({name: "White Castle (East 53rd Street)"}).explain()
+//use explain to see the winning plan
+db.restaurants.find({name: "White Castle (East 53rd Street)"}).sort({cuisine: 1}).explain()

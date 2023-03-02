@@ -1,0 +1,59 @@
+
+// 1. Execute find queries using query operators ($ne, $eq, $gt, $regex, etc) and projection.
+db.restaurants.find({ "cuisine": "Italian" }, { "name": 1, "cuisine": 1, "_id": 0 }).pretty()
+db.restaurants.find({ "cuisine": "Italian", "address.zipcode": "10075" }, { "name": 1, "cuisine": 1, "_id": 0 }).pretty()
+db.restaurants.find({ "cuisine": "Italian", "address.zipcode": { "$ne": "10075" } }, { "name": 1, "cuisine": 1, "_id": 0 }).pretty()
+db.restaurants.find({ "cuisine": "Italian", "address.zipcode": { "$eq": "10075" } }, { "name": 1, "cuisine": 1, "_id": 0 }).pretty()
+db.restaurants.find({ "cuisine": "Italian", "address.zipcode": { "$gt": "10075" } }, { "name": 1, "cuisine": 1, "_id": 0 }).pretty()
+db.restaurants.find({ "cuisine": "Italian", "address.zipcode": { "$regex": "10075$" } }, { "name": 1, "cuisine": 1, "_id": 0 }).pretty()
+db.restaurants.find({ "cuisine": "Italian" }, { "name": 1, "cuisine": 1, "_id": 0 }).pretty()
+
+//2. Insert arrays and arrays of nested documents.
+db.restaurants.insertMany([{"Key":"Value"}, {"Key":"Value"}, {"Key":"Value"}])
+
+
+//2. Insert arrays and arrays of nested documents.
+db.restaurants.insertMany([
+   {
+     "address": {
+       "street": "2 Avenue",
+       "zipcode": "10075",
+       "building": "1480",
+       "coord": [ -73.9557413, 40.7720266 ]
+     },
+     "borough": "Manhattan",
+     "cuisine": "Italian",
+     "grades": [
+       { "date": { "$date": 1393804800000 }, "grade": "A", "score": 11 },
+       { "date": { "$date": 1378857600000 }, "grade": "B", "score": 17 }
+     ],
+     "name": "Vella",
+     "restaurant_id": "41704620"
+   },
+   {
+     "address": {
+       "street": "2 Avenue",
+       "zipcode": "10075",
+       "building": "1480",
+       "coord": [ -73.9557413, 40.7720266 ]
+     },
+     "borough": "Manhattan",
+     "cuisine": "Italian",
+     "grades": [
+       { "date": { "$date": 1393804800000 }, "grade": "A", "score": 11 },
+       { "date": { "$date": 1378857600000 }, "grade": "B", "score": 17 }
+     ],
+     "name": "Vella",
+     "restaurant_id": "41704620"
+   }
+ ])
+   
+//3- Execute find queries on arrays and arrays of nested documents using $elemMatch, $all and $size.
+db.restaurants.find({ "grades.grade": "A" }, { "name": 1, "grades": 1, "_id": 0 }).pretty()
+db.restaurants.find({ "grades.grade": "A", "grades.score": 11 }, { "name": 1, "grades": 1, "_id": 0 }).pretty()
+db.restaurants.find({ "grades": { "$elemMatch": { "grade": "A", "score": 11 } } }, { "name": 1, "grades": 1, "_id": 0 }).pretty()
+db.restaurants.find({ "grades": { "$elemMatch": { "grade": "A", "score": { "$gt": 10 } } } }, { "name": 1, "grades": 1, "_id": 0 }).pretty()
+db.restaurants.find({ "grades.grade": "A", "grades.score": { "$gt": 10 } }, { "name": 1, "grades": 1, "_id": 0 }).pretty()
+db.restaurants.find({ "grades": { "$all": [ { "grade": "A", "score": 11 }, { "grade": "B", "score": 17 } ] } }, { "name": 1, "grades": 1, "_id": 0 }).pretty()
+db.restaurants.find({ "grades": { "$size": 2 } }, { "name": 1, "grades": 1, "_id": 0 }).pretty()
+

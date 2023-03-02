@@ -1,0 +1,132 @@
+//1- Using sort, skip and limit methods of the cursor.
+//sort
+db.restaurants.find().sort({name:1})
+//limit
+db.restaurants.find().limit(5)
+//skip
+db.restaurants.find().skip(5)
+
+//2- Running aggregation queries that use multiple stages ($match, $group, $count, $skip, $limit, $lookup, etc).
+//an aggregation query that returns the top 5 cuisines in Manhattan.
+//that use multiple stages ($match, $group, $count, $limit).
+db.restaurants.aggregate([
+    {$match: {borough: "Manhattan"}},
+    {$group: {_id: "$cuisine", count: {$sum: 1}}},
+    {$sort: {count: -1}},
+    {$limit: 5}
+])
+//an aggregation query that use multiple stages ($match, $skip, $group, $lookup).
+db.restaurants.aggregate([
+    {$match: {borough: "Manhattan"}},
+    {$skip: 5},
+    {$group: {_id: "$cuisine", count: {$sum: 1}}},
+    {$lookup: {
+
+        from: "restaurants",
+        localField: "_id",
+        foreignField: "cuisine",
+        as: "cuisine"
+    }}
+])
+
+//3- Using $project and $addFields with operator expressions such as ($getField, $first, $concat, $dateToString, etc).
+//Using $project with operator expressions $getField.
+db.restaurants.aggregate([
+    {$project: {
+        _id: 0,
+        name: 1,
+        cuisine: 1,
+        borough: 1,
+        grades: 1,
+        grade: "$grades.grade"
+    }}
+])
+//Using $project with operator expressions $first.
+db.restaurants.aggregate([
+    {$project: {
+        _id: 0,
+        name: 1,
+        cuisine: 1,
+        borough: 1,
+        grades: 1,
+        grade: {$first: "$grades.grade"}
+    }}
+
+      }}
+])
+//Using $project with operator expressions $concat.
+db.restaurants.aggregate([
+    {$project: {
+        _id: 0,
+        name: 1,
+        cuisine: 1,
+        borough: 1,
+        grades: 1,
+        grade: {$concat: ["$grades.grade", " ", "$grades.score"]}
+    }}
+])
+//Using $project and $addFields with operator expressions $dateToString.
+db.restaurants.aggregate([
+    {$project: {
+        _id: 0,
+        name: 1,
+        cuisine: 1,
+        borough: 1,
+        grades: 1,
+        date: {$dateToString: {format: "%Y-%m-%d", date: "$grades.date"}}
+    }}
+])
+//Using $addFields with operator expressions $dateToString.
+db.restaurants.aggregate([
+    {$addFields: {
+        date: {$dateToString: {format: "%Y-%m-%d", date: "$grades.date"}}
+    }}
+])
+//Using $addFields with operator expressions $getField.
+db.restaurants.aggregate([
+    {$addFields: {
+        grade: "$grades.grade"
+    }}
+])
+//Using $addFields with operator expressions $first.
+db.restaurants.aggregate([
+    {$addFields: {
+        grade: {$first: "$grades.grade"}
+    }}
+])
+//Using $addFields with operator expressions $concat.
+db.restaurants.aggregate([
+    {$addFields: {
+        name: {$concat: ["$name", " ", "$borough"]}
+    }}
+])
+
+//4- Reading and using $unwind.
+//Using $unwind with a field that is an array of documents.
+db.restaurants.aggregate([
+    {$unwind: "$grades"}
+])
+//Using $unwind with a field that is an array of arrays.
+db.restaurants.aggregate([
+    {$unwind: "$address.coord"}
+])
+
+//5- Using array update operators ($, $[], $[<identifier>]).
+//Using array update operators $.
+db.restaurants.updateOne(
+    {name: "Ho Mei Restaurant"},
+    {$set: {"grades.$[elem].score": 100}},
+    {arrayFilters: [{"elem.grade": "A"}]}
+)
+//Using array update operators $[].
+db.restaurants.updateOne(
+    {name: "Ho Mei Restaurant"},
+    {$set: {"grades.$[].score": 100}},
+    {arrayFilters: [{"elem.grade": "A"}]}
+)
+//Using array update operators $[<identifier>].
+db.restaurants.updateOne(
+    {name: "Ho Mei Restaurant"},
+    {$set: {"grades.$[elem].score": 100}},
+    {arrayFilters: [{"elem.grade": "A"}]}
+)
